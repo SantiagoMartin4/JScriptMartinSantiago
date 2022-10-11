@@ -1,0 +1,22 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.img {
+    background-image: url("../media/hd-wallpaper-g5011e606c_1920.jpg");
+    height: 100vh;
+    width: 100vw;
+    z-index: 1;
+    
+}
+.main {
+    background-color: rgb(251, 216, 185);
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    padding: 25px;
+    color: rgb(0, 0, 0);
+    z-index: 9999;
+}
