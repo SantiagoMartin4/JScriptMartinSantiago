@@ -5,22 +5,93 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="./css/styles.css" rel="stylesheet" type="text/css">
-    <title>Quiz Biológica  |   Bio-Quiz</title>
+    <title>Quiz Biológica | Bio-Quiz</title>
 </head>
 
 <body>
-    <div class="img">
-    <div class="main">
-        <h1>Bienvenida/o a la Quiz Biológica del día</h1>
-        <h2> Algunas reglas de juego antes de comenzar: <br>
-             * Para las respuestas se usarán solo nombres vulgares (no científicos) por el momento.
-        </h2>
-        <h2> * Vas a tener 3 pistas para adivinar la palabra en cada Quiz </h2>
-        <h3>  ---- Ahora si, comencemos. ¡Buena suerte! =) ---- </h3>
-    </div>
-    </div>
+    <header>
+        <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+            <span class="navbar-brand mb-0 h1">Quiz Biológica  ||  Bio-Quiz</span>
+        </nav>
+    </header>
+    <main id="backgr">
+
+        <section id="login">
+            <div id="form">
+                <h5> Antes de comenzar: <br>ingresa tu nombre para personalizar el seguimiento de tus participaciones en la Bio-Quiz! <br> Caso contrario, haz click en "Empezar"</h5>
+                <label for="Nombre">Escribí tu nombre o un alias</label>
+                <input id= "nombre" class="form-control form-control-lg" type="text" placeholder="Nombre">
+                <br>
+                <br>
+                <!-- <h6> Tilda la casilla de "Recordarme" para guardar los puntajes que vayas obteniendo en las Quiz!</h6>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="recordar">
+                    <label class="form-check-label" for="Recordarme">Recordarme</label>
+                </div> -->
+                <button id="btnIniciar" type="submit" class="btn btn-primary">Empezar</button>
+
+            </div>
+        </section>
+
+        <article id="tema">
+            <div id="buttons">
+                <h5 id="selecc"> Selecciona un tema de Quiz </h5>
+                <button id="mamiferosBtn" type="button" class="btn btn-info">Mamíferos</button>
+                <button id="avesBtn" type="button" class="btn btn-warning">Aves</button>
+                <button id="plantasBtn" type="button" class="btn btn-success">Plantas</button>
+            </div>
+            <div id="showPastAnswer">
+            </div>
+            <div id="menu2">
+                <div id="answers">
+                    <button id="answersBtn" type="button" class="btn btn-outline-danger">Respuestas Anteriores</button>
+                </div>
+                <div id="score">
+                    <button id="scoreBtn" type="button" class="btn btn-outline-info">Ver Mis Puntajes</button>
+                </div>
+            </div>
+        </article>
+        <div id="clues"></div>
+        <div id="userAnswer">
+            <div>
+                <label for="Respuesta">Escribí tu respuesta y luego toca el botón "¡Adivina!"</label>
+                <input id="inputUserAnswer" class="form-control form-control-lg" type="text" placeholder="Respuesta"> 
+            </div>
+            <div id="mamiferosControl">
+                <button id="btnUserAnswerM" type="submit" class="btn btn-info" value="">¡Adivina!</button>
+                <button id="nextClueM" type="button" class="btn btn-outline-danger">Siguiente Pista</button>
+                <button id="lastClueM" type="button" class="btn btn-outline-danger">Última Pista</button>
+                <button id="showAnswerM" type="button" class="btn btn-outline-danger">Mostrar respuesta</button>
+            </div>
+            <div id="avesControl">
+                <button id="btnUserAnswerA" type="submit" class="btn btn-info" value="">¡Adivina!</button>
+                <button id="nextClueA" type="button" class="btn btn-outline-danger">Siguiente Pista</button>
+                <button id="lastClueA" type="button" class="btn btn-outline-danger ">Última Pista</button>
+                <button id="showAnswerA" type="button" class="btn btn-outline-danger">Mostrar respuesta</button>
+            </div>
+            <div id="plantasControl">
+                <button id="btnUserAnswerP" type="submit" class="btn btn-info" value="">¡Adivina!</button>
+                <button id="nextClueP" type="button" class="btn btn-outline-danger">Siguiente Pista</button>
+                <button id="lastClueP" type="button" class="btn btn-outline-danger">Última Pista</button>
+                <button id="showAnswerP" type="button" class="btn btn-outline-danger">Mostrar respuesta</button>
+            </div>
+        </div>
+    </main>
+
+
     <script src="./js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
