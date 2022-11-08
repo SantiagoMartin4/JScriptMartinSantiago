@@ -4,13 +4,22 @@ const hideForm = document.getElementById('login'), showTema = document.getElemen
 const btnMamiferos = document.getElementById('mamiferosBtn'), btnMamiferosNextClue = document.getElementById('nextClueM'), btnMamiferosLastClue = document.getElementById('lastClueM'), btnUserAnswerM = document.getElementById('btnUserAnswerM'), answerM = document.getElementById('showAnswerM'), mamiferosControl = document.getElementById('mamiferosControl');
 
 // defino const de buttons para la parte de aves
-const btnAves = document.getElementById('avesBtn'), btnAvesNextClue = document.getElementById('nextClueA'), btnAvesLastClue = document.getElementById('lastClueA'), btnUserAnswerA = document.getElementById('btnUserAnswerA'), answerA = document.getElementById('showAnswerA'), avesControl = document.getElementById('avesControl');  
+const btnAves = document.getElementById('avesBtn'), btnAvesNextClue = document.getElementById('nextClueA'), btnAvesLastClue = document.getElementById('lastClueA'), btnUserAnswerA = document.getElementById('btnUserAnswerA'), answerA = document.getElementById('showAnswerA'), avesControl = document.getElementById('avesControl');
 
 // defino const de buttons para la parte de plantas
-const btnPlantas = document.getElementById('plantasBtn'), btnPlantasNextClue = document.getElementById('nextClueP'), btnPlantasLastClue = document.getElementById('lastClueP'), btnUserAnswerP = document.getElementById('btnUserAnswerP'), answerP = document.getElementById('showAnswerP'), plantasControl = document.getElementById('plantasControl'); 
+const btnPlantas = document.getElementById('plantasBtn'), btnPlantasNextClue = document.getElementById('nextClueP'), btnPlantasLastClue = document.getElementById('lastClueP'), btnUserAnswerP = document.getElementById('btnUserAnswerP'), answerP = document.getElementById('showAnswerP'), plantasControl = document.getElementById('plantasControl');
 
 // PARA LA PARTE DE STORAGE
 const nombreUsuario = document.getElementById('nombre');
+
+// PARA LA PARTE DE LA API DE ACCUWEATHER//
+const ciudadForm = document.getElementById('ciudadForm');
+const cards = document.querySelector('.card');
+const details = document.querySelector('.details');
+const imgClima = document.querySelector('img.time');
+const iconito = document.querySelector('.icon img');
+
+
 
 // FUNCION CONSTRUCTORA PARA MI ARRAY CON DATOS DE LA QUIZ
 class respuesta {
@@ -30,20 +39,35 @@ const respuestas = [
     new respuesta('plantas', 'ceibo', 'Primera pista: La planta miseriosa es una planta con flor y posee el título de -flor nacional argentina y uruguaya- aunque también es una planta típica de Brasil y Paraguay.', 'Segunda pista: La planta misteriosa es un árbol. Crece en las riberas del Río Paraná y del Río de La Plata aunque también cerca de cualquier río, lago o pantano. Su madera es muy liviana y se la utiliza para fabricar artículos de peso reducido como artesanías.', 'Tercera pista: Por la vistosidad de sus flores se la cultiva mucho para parquez, plazas, jardines y paseos. Sus flores son grandes y de un color rojo vivo.', 3),
 ]
 
-function iniciar() { 
-    hideForm.className = 'hide';
-    showTema.className = 'show';
-    localStorage.setItem('nombre',nombreUsuario.value);
+function iniciarPuntaje() {
+    let puntajeM = 0, puntajeA = 0, puntajeP = 0;
+    localStorage.setItem('puntajeM', puntajeM);
+    localStorage.setItem('puntajeA', puntajeA);
+    localStorage.setItem('puntajeP', puntajeP);
 }
 
+function iniciar() {
+    hideForm.className = 'hide';
+    showTema.className = 'show';
+    localStorage.setItem('nombre', nombreUsuario.value);
+    let puntajeM = localStorage.getItem('puntajeM');
+    if (puntajeM == null) {
+        iniciarPuntaje();
+    }
+}
 btnIniciar.addEventListener('click', iniciar);
 
-// creo funciones y funcionalidad del DOM para separar los quiz, de mamiferos, de aves y de plantas
+////////////////////////////////////////////////////////////////////
+// Separo mediante DOM los quiz de mamiferos, de aves y de plantas//
+// Defino sus respectivas funcionalidades                        //
 
 ///////////////////////
 ///PARTE MAMIFEROS////
 
-function mamiferos() {
+localStorage.clear()
+sessionStorage.clear()
+
+function mamiferosDOM() {
     let clean = document.getElementById('clues');
     clean.innerHTML = '';
     showTema.className = 'hide';
@@ -67,25 +91,42 @@ function mamiferos() {
     let clue1 = document.getElementById('clues');
     clue1.innerHTML += respuestas[0].pista1
 }
+function mamiferos() {
+    visitedM = sessionStorage.getItem('visitedM');
+    (visitedM == null) ? (mamiferosDOM()) : (btnMamiferos.className = 'hide');
+}
 
 btnMamiferos.addEventListener('click', mamiferos);
 
 btnUserAnswerM.addEventListener('click', () => {
     let respuestaUser = inputUserAnswer.value.toLowerCase();
     if (respuestaUser == respuestas[0].palabra) {
+        btnUserAnswerM.className = 'hide';
+        btnMamiferosNextClue.className = 'hide';
         showTema.className = 'show';
         hideMenu2.className = 'show';
         let congrats = document.getElementById('clues');
         congrats.innerHTML = '';
         congrats.innerHTML += `<h2>¡Felicitaciones! resolviste la Quiz de mamíferos</h2>`;
-        let puntajeM = 1
-        localStorage.setItem('puntajeM',puntajeM);
+        let puntajeM = parseInt(localStorage.getItem('puntajeM'));
+        puntajeM += 1;
+        localStorage.setItem('puntajeM', puntajeM);
+        let visitedM = true;
+        sessionStorage.setItem('visitedM', visitedM);
+        Swal.fire({
+            title: '¡Felicitaciones! resolviste la Quiz de Mamíferos',
+            text: 'Te dejo esta imágen de una familia de carpinchitos',
+            imageUrl: 'https://pixabay.com/get/g2a63a82d4fa04017de46d92e5fd85275eba2c1d84b315bad76bad48a3de3421388f819ed670514cdeacb022e89b8c25403b9d4af363a44edf8f17f0d0aea5f96271f154c7176f9edd8bb7528b94f675e_640.jpg',
+            imageWidth: 640,
+            imageHeight: 426,
+            imageAlt: 'Carpincho',
+        })
     }
-    else  {
+    else {
         let tryAgain = document.getElementById('clues');
         tryAgain.innerHTML += `<h2>Intenta nuevamente, o de ser posible pide otra pista</h2>`;
     }
-}) 
+})
 btnMamiferosNextClue.addEventListener('click', () => {
     let clue2 = document.getElementById('clues');
     clue2.innerHTML += `<br> <br>` + respuestas[0].pista2
@@ -98,7 +139,7 @@ btnMamiferosLastClue.addEventListener('click', () => {
     clue3.innerHTML += `<br> <br>` + respuestas[0].pista3
     btnMamiferosLastClue.className = 'hide';
     answerM.className = 'show';
-}) 
+})
 
 answerM.addEventListener('click', () => {
     showTema.className = 'show';
@@ -106,15 +147,25 @@ answerM.addEventListener('click', () => {
     btnUserAnswerM.className = 'hide';
     let answer = document.getElementById('clues');
     answer.innerHTML += `<h3>El mamífero misterioso es: </h3>` + respuestas[0].palabra.toUpperCase();
-    let puntajeM = 0;
-    localStorage.setItem('puntajeM',puntajeM);
+    let puntajeM = parseInt(localStorage.getItem('puntajeM'));
+    puntajeM += 0;
+    localStorage.setItem('puntajeM', puntajeM);
+    let visitedM = true;
+    sessionStorage.setItem('visitedM', visitedM);
+    Swal.fire({
+        title: 'la respuesta para la Quiz de Mamíferos es "carpincho"',
+        text: 'Te dejo esta imágen de una familia de carpinchitos',
+        imageUrl: 'https://pixabay.com/get/g2a63a82d4fa04017de46d92e5fd85275eba2c1d84b315bad76bad48a3de3421388f819ed670514cdeacb022e89b8c25403b9d4af363a44edf8f17f0d0aea5f96271f154c7176f9edd8bb7528b94f675e_640.jpg',
+        imageWidth: 640,
+        imageHeight: 426,
+        imageAlt: 'Carpincho',
+    })
 })
 
 
-////////////////////////////////////
+///////////////////
 // PARTE DE AVES//
-
-function aves() {
+function avesDOM() {
     let clean = document.getElementById('clues');
     clean.innerHTML = '';
     showTema.className = 'hide';
@@ -135,7 +186,11 @@ function aves() {
     btnMamiferosNextClue.className = 'hide';
     btnPlantasNextClue.className = 'hide';
     let clue1 = document.getElementById('clues');
-    clue1.innerHTML += respuestas[1].pista1
+    clue1.innerHTML += respuestas[1].pista1;
+}
+function aves() {
+    visitedA = sessionStorage.getItem('visitedA');
+    (visitedA == null) ? (avesDOM()) : (btnAves.className = 'hide');
 }
 btnAves.addEventListener('click', aves);
 
@@ -144,13 +199,26 @@ btnUserAnswerA.addEventListener('click', () => {
     if (respuestaUser == respuestas[1].palabra) {
         showTema.className = 'show';
         hideMenu2.className = 'show';
+        btnUserAnswerA.className = 'hide';
+        btnAvesNextClue.className = 'hide';
         let congrats = document.getElementById('clues');
         congrats.innerHTML = '';
         congrats.innerHTML += `<h2>¡Felicitaciones! resolviste la Quiz de Aves</h2>`;
-        let puntajeA = 1
-        localStorage.setItem('puntajeA',puntajeA);
+        let puntajeA = parseInt(localStorage.getItem('puntajeA'));
+        puntajeA += 1;
+        localStorage.setItem('puntajeA', puntajeA);
+        let visitedA = true;
+        sessionStorage.setItem('visitedA', visitedA);
+        Swal.fire({
+            title: '¡Felicitaciones! resolviste la Quiz de Aves',
+            text: 'Te dejo esta imágen de un hornero construyendo su nido... porque ¿por qué no?',
+            imageUrl: 'https://pixabay.com/get/g892b31b7e37f19c80fc191d78cff861d3103bb28fd2976151a316f792bd7fc5bf99d412e16fa5150e4b3ca803b447ab935cbdf63f0c7915923b59237212a282f380e69db4391a87c3d5693b3aab135ce_640.jpg',
+            imageWidth: 640,
+            imageHeight: 480,
+            imageAlt: 'Hornero',
+        })
     }
-    else  {
+    else {
         let tryAgain = document.getElementById('clues');
         tryAgain.innerHTML += `<h2>Intenta nuevamente, o de ser posible pide otra pista</h2>`;
     }
@@ -168,7 +236,7 @@ btnAvesLastClue.addEventListener('click', () => {
     clue3.innerHTML += `<br> <br>` + respuestas[1].pista3
     btnAvesLastClue.className = 'hide';
     answerA.className = 'show';
-}) 
+})
 
 answerA.addEventListener('click', () => {
     showTema.className = 'show';
@@ -176,13 +244,24 @@ answerA.addEventListener('click', () => {
     btnUserAnswerA.className = 'hide';
     let answer = document.getElementById('clues');
     answer.innerHTML += `<h3>El ave misteriosa es: </h3>` + respuestas[1].palabra.toUpperCase();
+    let puntajeA = parseInt(localStorage.getItem('puntajeA'));
+    puntajeA += 0;
+    let visitedA = true;
+    sessionStorage.setItem('visitedA', visitedA);
+    Swal.fire({
+        title: 'La respuesta para la Quiz de Aves es "hornero"',
+        text: 'Te dejo esta imágen de un hornero construyendo su nido... porque ¿por qué no?',
+        imageUrl: 'https://pixabay.com/get/g892b31b7e37f19c80fc191d78cff861d3103bb28fd2976151a316f792bd7fc5bf99d412e16fa5150e4b3ca803b447ab935cbdf63f0c7915923b59237212a282f380e69db4391a87c3d5693b3aab135ce_640.jpg',
+        imageWidth: 640,
+        imageHeight: 480,
+        imageAlt: 'Hornero',
+    })
 })
 
 
 //////////////////////
 // PARTE DE PLANTAS//
-
-function plantas() {
+function plantasDOM() {
     let clean = document.getElementById('clues');
     clean.innerHTML = '';
     showTema.className = 'hide';
@@ -205,6 +284,10 @@ function plantas() {
     let clue1 = document.getElementById('clues');
     clue1.innerHTML += respuestas[2].pista1
 }
+function plantas() {
+    visitedP = sessionStorage.getItem('visitedP');
+    (visitedP == null) ? (plantasDOM()) : (btnPlantas.className = 'hide');
+}
 btnPlantas.addEventListener('click', plantas);
 
 btnUserAnswerP.addEventListener('click', () => {
@@ -212,13 +295,27 @@ btnUserAnswerP.addEventListener('click', () => {
     if (respuestaUser == respuestas[2].palabra || respuestaUser == 'seibo') {
         showTema.className = 'show';
         hideMenu2.className = 'show';
+        btnUserAnswerP.className = 'hide';
+        btnPlantasNextClue.className = 'hide';
         let congrats = document.getElementById('clues');
         congrats.innerHTML = '';
         congrats.innerHTML += `<h2>¡Felicitaciones! resolviste la Quiz de plantas</h2>`;
-        let puntajeP = 1
-        localStorage.setItem('puntajeP',puntajeP);
+        let puntajeP = parseInt(localStorage.getItem('puntajeP'));
+        puntajeP += 1;
+        localStorage.setItem('puntajeP', puntajeP);
+        let visitedP = true;
+        sessionStorage.setItem('visitedP', visitedP);
+        Swal.fire({
+            title: '¡Felicitaciones! resolviste la Quiz de Plantas',
+            text: 'Te dejo esta imágen de unos fantásticos ceibos luciendo sus colores',
+            imageUrl: 'https://pbs.twimg.com/media/EYUIN4UWsAAdJCA?format=jpg&name=large',
+            imageWidth: 900,
+            imageHeight: 500,
+            imageAlt: 'Ceibo',
+        })
+
     }
-    else  {
+    else {
         let tryAgain = document.getElementById('clues');
         tryAgain.innerHTML += `<h2>Intenta nuevamente, o de ser posible pide otra pista</h2>`;
     }
@@ -235,8 +332,8 @@ btnPlantasLastClue.addEventListener('click', () => {
     let clue3 = document.getElementById('clues');
     clue3.innerHTML += `<br> <br>` + respuestas[2].pista3
     btnPlantasLastClue.className = 'hide';
-    answerP.className= 'show';
-}) 
+    answerP.className = 'show';
+})
 
 answerP.addEventListener('click', () => {
     showTema.className = 'show';
@@ -244,11 +341,23 @@ answerP.addEventListener('click', () => {
     btnUserAnswerP.className = 'hide';
     let answer = document.getElementById('clues');
     answer.innerHTML += `<h3>La planta misteriosa es: </h3>` + respuestas[2].palabra.toUpperCase() + `<span> o SEIBO</span>`;
+    let puntajeP = parseInt(localStorage.getItem('puntajeP'));
+    puntajeP += 0;
+    let visitedP = true;
+    sessionStorage.setItem('visitedP', visitedP);
+    Swal.fire({
+        title: 'La respuesta para la Quiz de Plantas es "ceibo"',
+        text: 'Te dejo esta imágen de unos fantásticos ceibos luciendo sus colores',
+        imageUrl: 'https://pbs.twimg.com/media/EYUIN4UWsAAdJCA?format=jpg&name=large',
+        imageWidth: 900,
+        imageHeight: 500,
+        imageAlt: 'Ceibo',
+    })
 })
 
 
-////////////////////////////////////////////////////////////////
-/// MENU SECUNDARIO: RESPUESTAS ANTERIORES Y VER MIS PUNTAJES//
+///////////////////////////////////////////////////////////////
+// MENU SECUNDARIO: RESPUESTAS ANTERIORES Y VER MIS PUNTAJES//
 
 ///////////////////////////
 //RESPUESTAS ANTERIORES///
@@ -263,9 +372,9 @@ btnAnswers.addEventListener('click', () => {
     showAnswerInput.className = 'hide';
     showPastAnswerDiv.className = 'show';
     showPastAnswerDiv.innerHTML = '';
-    showPastAnswerDiv.innerHTML += `<span>La solución anterior de la Bio-Quiz para el tema </span>` + respuestas[0].tema.toUpperCase() + `<span> era </span>` + respuestas[0].palabra.toUpperCase() + `<br><br>`;
-    showPastAnswerDiv.innerHTML += `<span>para el tema </span>` + respuestas[1].tema.toUpperCase() + `<span> era </span>` + respuestas[1].palabra.toUpperCase() + `<br><br>`;
-    showPastAnswerDiv.innerHTML += `<span>para el tema </span>` + respuestas[2].tema.toUpperCase() + `<span> era </span>` + respuestas[2].palabra.toUpperCase() + `<span> o SEIBO</span>`;
+    showPastAnswerDiv.innerHTML += `<span>Las respuestas correctas de la semana pasada para la Bio-Quiz eran: <br></span>${respuestas[0].tema.toUpperCase()}<span> = </span>${respuestas[0].palabra.toUpperCase()}<br><br>`;
+    showPastAnswerDiv.innerHTML += `${respuestas[1].tema.toUpperCase()}<span> = </span>${respuestas[1].palabra.toUpperCase()}<br><br>`;
+    showPastAnswerDiv.innerHTML += `${respuestas[2].tema.toUpperCase()}<span> = </span>${respuestas[2].palabra.toUpperCase()}<span> o SEIBO</span>`;
 })
 
 /////////////////////
@@ -277,5 +386,86 @@ btnScore.addEventListener('click', () => {
     let puntajeMamiferos = localStorage.getItem('puntajeM');
     let puntajeAves = localStorage.getItem('puntajeA');
     let puntajePlantas = localStorage.getItem('puntajeP');
-    showPastAnswerDiv.innerHTML += `<span>¡Hola </span>` + nombreUsuario +`<span>! <br>En cada Bio-Quiz acertada obtienes 1 punto <br>Tus puntajes acumulados en la Bio-Quiz hasta el día de hoy para cada tema son: <br> Mamíferos: </span>` + puntajeMamiferos + `<span><br>Aves: </span>` + puntajeAves + `<span><br>Plantas: </span>` + puntajePlantas + `<span><br><br>Regresa la semana que viene para otra Bio-Quiz<br>¡Guarda esta página los en favoritos de tu navegador así no te pierdes ninguna Quiz!<br>¡Gracias! hasta la próxima </span>`;
+    showPastAnswerDiv.innerHTML += `<span>¡Hola </span>${nombreUsuario}<span>! <br>En cada Bio-Quiz acertada obtienes 1 punto <br>Tus puntajes acumulados en la Bio-Quiz hasta el día de hoy para cada tema son: <br> Mamíferos: </span>${puntajeMamiferos}<span><br>Aves: </span>${puntajeAves}<span><br>Plantas: </span>${puntajePlantas}<span><br><br>Regresa la semana que viene para otra Bio-Quiz<br>¡Guarda esta página en los favoritos de tu navegador así no te pierdes ninguna Quiz!<br>Gracias por participar, hasta la próxima </span>`;
+})
+
+
+///////////////////////////////////////////////////////
+// Manejo promesas y código asincrónico para incluir//
+// datos de la API de accuweather en mi proyecto/////
+///////////////////////////////////////////////////////////
+// separé los archivos de la api en dos, 1) accuweather.js //
+// maneja toda la parte de request (y va linkeado primero en el HTML)//
+// y 2) en este script principal manejo como venía haciendo el DOM y la funcionalidad con promesas//
+
+////////////////////////////////////////////////////////
+//Codeo funcionalidad del DOM para la parte de la API//
+
+
+// funcion encargada de actualizar los datos mediante DOM//
+const actualizarVista = (datos) => {
+    const detallesCiudad = datos.detallesCiudad;
+    const pronostico = datos.pronostico;
+
+    // actualizar los detalles
+    details.innerHTML = `
+    <h5 class="my-3">${detallesCiudad.EnglishName}</h5>
+    <div class="my-3">${pronostico.WeatherText}</div>
+    <div class="display-4 my-4">
+        <span>${pronostico.Temperature.Metric.Value}</span>
+        <span>&deg;C</span>
+    </div>`;
+
+    // actualizar iconos de noche y día, además de los iconos de clima//
+
+    const iconitoSrc = `../media/icons/${pronostico.WeatherIcon}.svg`;
+    iconito.setAttribute('src', iconitoSrc);
+
+    let climaSrc = null;
+    if (pronostico.IsDayTime){
+        climaSrc = '../media/day.svg';
+    }
+    else {
+        climaSrc = '../media/night.svg';
+    }
+    imgClima.setAttribute('src', climaSrc);
+
+
+
+
+
+
+    // cambiar el d-none (la GATA FLORA que CONOCÍ MUY TARDE EN EL CURSO POR PERDERME EL AFTER!!! -.-
+    // NO! no voy a cambiar todo mi hermoso DOM hecho a sudor y lágrimas con mis clases HIDE Y SHOW DE CSS jajaja. sorry not sorry
+    if(cards.classList.contains('d-none')){
+        cards.classList.remove('d-none');
+    }
+
+}
+// código que me actualiza la ciudad elegida
+
+const actualizarCiudad = async (ciudad) => {
+
+    const detallesCiudad = await obtenerCiudad(ciudad);
+    const pronostico = await obtenerClima(detallesCiudad.Key);
+    // estas promesas las retorno en un objeto y de paso implemento la object shorthand notation // 
+    return {
+        /* detallesCiudad:  */detallesCiudad,
+        /* pronostico:  */pronostico
+    };
+};
+
+
+
+ciudadForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    //obtengo mi ciudad del value//
+    const ciudad = ciudadForm.ciudad.value.trim();
+    ciudadForm.reset();
+
+    //muestro los valores para la ciudad elegida//
+    actualizarCiudad(ciudad)
+        .then(datos => actualizarVista(datos))
+        .catch(error => console.log(error));
 })
